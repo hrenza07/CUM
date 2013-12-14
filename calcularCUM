@@ -1,0 +1,50 @@
+#!/bin/bash
+echo "Introduzca sus UM actuales y luego presione [ENTER]"
+read UMActual
+echo "**********************************"
+echo "Introduzca las UV ganadas hasta el ciclo anterior"
+read UVActual
+echo "**********************************"
+#ACA capturamos los promedios de las materias
+#y las UV correspondientes a cada una
+count=0
+while [  $count -lt 5 ]; do
+		echo "Promedio de la Materia "$(( $count+1 ))
+		read unix[$count]
+		echo "*********"
+		echo "UV de la Materia"
+		read unix3[$count]
+		echo "*********"
+let count=count+1
+done
+
+#Aca calculamos las UM de cada Materia
+i=0
+while [ $i -lt 5 ]; do
+	valor[$i]=$(echo "${unix[$i]}*4" | bc -l)
+	echo "UM de materia $i: ${valor[$i]}"
+let i=i+1
+done
+
+#Aca acumulamos las UM del ciclo
+#${arr[0]}
+x=0
+UMCiclo=0
+while [ $x -lt 5 ]; do
+	UMCiclo=$(echo "$UMCiclo+${valor[$x]}" | bc -l)
+let x=x+1
+done
+#Aca acumulamos las UV del ciclo
+x2=0
+while [ $x2 -lt 5 ]; do
+	UVCiclo=$(( UVCiclo+unix3[$x2] ))
+let x2=x2+1
+done
+UVTotal=$(( $UVActual+$UVCiclo ))
+UMTotal=$(echo "$UMActual+$UMCiclo" | bc -l)
+CUM=$(echo "scale=2; $UMTotal/$UVTotal" | bc -l)
+echo "**************************"
+echo "*** Su CUM es de: $CUM ***"
+echo "**************************"
+sleep 5
+chromium "https://www.facebook.com/groups/csluesfmocc/" &
